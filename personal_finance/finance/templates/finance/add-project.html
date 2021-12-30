@@ -1,7 +1,7 @@
 {% extends 'finance/base.html' %} {% block content %}
 <div class="container">
   <form action="" method="POST">
-    {% csrf_token %} {{form}}
+    {% csrf_token %} {{ form.as_p }}
     <label for="categoryInput">
       Expense Categories (hit enter after every category)
     </label>

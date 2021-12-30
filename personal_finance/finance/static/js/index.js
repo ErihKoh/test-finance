@@ -25,25 +25,30 @@
           `;
     categoriesContainer.insertAdjacentHTML("beforeend", categoriesMarkup);
   }
-
-  function fetchCategoryArray() {
-    let categories = [];
-    let categoriesArray = document.querySelectorAll(".category");
-    categoriesArray.forEach((e) => {
-      nameItem = e.querySelector(".name").innerHTML;
-      if (nameItem === "") {
-        return;
-      }
-      categories.push(nameItem);
-    });
-    return categories;
-  }
-
-  function updateCategoriesString() {
-    let categoriesArray = fetchCategoryArray();
-    let categoriesString = document.querySelector(
-      'input[name="categoriesString"]'
-    );
-    categoriesString.value = categoriesArray.join(",");
-  }
 })();
+
+function fetchCategoryArray() {
+  let categories = [];
+  let categoriesArray = document.querySelectorAll(".category");
+  categoriesArray.forEach((e) => {
+    nameItem = e.querySelector(".name").innerHTML;
+    if (nameItem === "") {
+      return;
+    }
+    categories.push(nameItem);
+  });
+  return categories;
+}
+
+function updateCategoriesString() {
+  let categoriesArray = fetchCategoryArray();
+  let categoriesString = document.querySelector(
+    'input[name="categoriesString"]'
+  );
+  categoriesString.value = categoriesArray.join(",");
+}
+
+function removeCategory(e) {
+  e.parentElement.remove();
+  updateCategoriesString();
+}

@@ -12,21 +12,27 @@
       <div class="col s12 m6 l4">
         <div class="card-panel">
           <h6 class="bold">Budget left</h6>
-          <h1 class="bold">$...</h1>
+          {% if project.budget_left > 0 %}
+          <h1 class="bold green-text">${{ project.budget_left }}</h1>
+          {% elif project.budget_left == 0 %}
+          <h1 class="bold orange-text">${{ project.budget_left }}</h1>
+          {% else %}
+          <h1 class="bold red-text">${{ project.budget_left }}</h1>
+          {% endif %}
         </div>
       </div>
 
       <div class="col s12 m6 l4">
         <div class="card-panel">
           <h6 class="bold">Total Transaction</h6>
-          <h1 class="bold">$...</h1>
+          <h1 class="bold">{{ project.total_transactions }}</h1>
         </div>
       </div>
     </div>
   </section>
   <section class="section section-expenses">
     <div class="row">
-      <button class="btn waves-effect right">
+      <button class="btn waves-effect right modal-trigger" href="#expenseModal">
         <i class="material-icons white-text left">add_circle_outline</i>
         Add expense
       </button>
@@ -46,7 +52,7 @@
             <div class="col bold l1">
               <span class="title">{{ expense.category.name }}</span>
             </div>
-            <a href="">
+            <a onclick="deleteExpense(this)" data-id="{{expense.id}}">
               <i class="material-icons red-text right">close</i>
             </a>
           </div>
@@ -56,5 +62,49 @@
     </ul>
   </section>
 </div>
+
+<div id="expenseModal" class="modal">
+  <div class="modal-content">
+    <h4>Add Expense</h4>
+    <form method="post">
+      {% csrf_token %}
+      <label for="title">Title </label>
+      <input name="title" id="title" />
+
+      <label for="amount"> Amount </label>
+      <input name="amount" id="amount" />
+
+      <select name="category">
+        {% for category in category_list %}
+        <option>{{category.name}}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn">Add</button>
+    </form>
+  </div>
+</div>
+<script>
+  let elem = document.querySelector(".modal");
+  let instance = M.Modal.init(elem);
+
+  let elem2 = document.querySelector("select");
+  let instance2 = M.FormSelect.init(elem2);
+
+  function deleteExpense(e) {
+    let id = e.dataset.id;
+    e.closest("li").remove();
+
+    fetch("", {
+      method: "DELETE",
+      headers: {
+        "X-CSRFToken": "{{csrf_token}}",
+      },
+      body: JSON.stringify({
+        id: id,
+      }),
+      credentials: "same-origin",
+    });
+  }
+</script>
 
 {% endblock %}
