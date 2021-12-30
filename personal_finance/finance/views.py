@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.views.generic import CreateView
 from .models import Project
 
 
@@ -9,3 +10,9 @@ def project_list(request):
 def project_detail(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     return render(request, 'finance/project-detail.html', {'project': project, 'expense_list': project.expenses.all()})
+
+
+class ProjectCreateView(CreateView):
+    model = Project
+    template_name = 'finance/add-project.html'
+    fields = ('name', 'budget')
